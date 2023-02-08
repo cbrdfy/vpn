@@ -40,8 +40,8 @@ resource "aws_instance" "vpn_server" {
       "containerd.io",
       "docker-compose-plugin"
     ],
-    region     = "eu-north-1",
-    bucket     = "wg-vpn-bucket",
+    region     = var.region,
+    bucket     = var.aws_s3_bucket_name,
     mount_path = "/mnt/${aws_s3_bucket.wg-vpn-bucket.bucket}/"
   })
   tags = {

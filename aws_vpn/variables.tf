@@ -38,3 +38,9 @@ variable "subnet_public_names" {
   type        = list(string)
   default     = ["vpn_pub_a"]
 }
+
+variable "aws_s3_bucket_name" {
+  description = "Name for S3 bucket to store user config files"
+  type        = string
+  default     = "wg-vpn-bucket"
+}
