@@ -11,9 +11,15 @@ variable "instance_type" {
 }
 
 variable "key_name" {
-  description = "SSH Key name"
+  description = "SSH key name"
   type        = string
-  default     = "vpn_ama"
+  default     = "nvirginia"
+}
+
+variable "key_path" {
+  description = "Path to your SSH key"
+  type        = string
+  default     = "path_to_your_ssh"
 }
 
 variable "vpc_cidr" {
@@ -40,7 +46,7 @@ variable "subnet_public_names" {
 }
 
 variable "aws_s3_bucket_name" {
-  description = "Name for S3 bucket to store user config files"
+  description = "Unique name for S3 bucket to store user config files"
   type        = string
-  default     = "wg-vpn-bucket"
+  default     = "wg-vpn-bucket-qwe2024"
 }

@@ -40,8 +40,8 @@ resource "aws_iam_policy" "s3_access" {
             "s3:PutObject"
           ],
           "Resource" : [
-            "arn:aws:s3:::wg-vpn-bucket",
-            "arn:aws:s3:::wg-vpn-bucket/*"
+            "arn:aws:s3:::${var.aws_s3_bucket_name}",
+            "arn:aws:s3:::${var.aws_s3_bucket_name}/*"
           ]
         }
       ]
@@ -59,7 +59,7 @@ resource "aws_iam_role_policy_attachment" "attach_ec2_s3" {
   policy_arn = aws_iam_policy.s3_access.arn
 }
 
-// 
+// Create IAM instance profile to associate IAM role with EC2
 resource "aws_iam_instance_profile" "ec2_profile" {
   name = "ec2_profile"
   role = aws_iam_role.ec2_role.name

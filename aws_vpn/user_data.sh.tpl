@@ -25,7 +25,7 @@ cat > /home/${user}/docker-compose.yaml <<EOF
 version: "2.1"
 services:
   wireguard:
-    image: linuxserver/wireguard
+    image: linuxserver/wireguard:1.0.20210914
     container_name: wireguard
     cap_add:
       - NET_ADMIN
@@ -39,8 +39,9 @@ services:
       - PEERS=3
       - PEERDNS=1.1.1.1
       - INTERNAL_SUBNET=10.13.13.0
+      - LOG_CONFS=false
     volumes:
-      - /mnt/wg-vpn-bucket/config:/config
+      - /mnt/${bucket}/config:/config
     ports:
       - 51820:51820/udp
     sysctls:
@@ -66,7 +67,3 @@ cd /home/${user}/
 docker compose up -d
 
 echo "-----------------USER_DATA END-----------------"
-
-# TODO:
-# Consistent data
-# Attach S3 Policies to asg

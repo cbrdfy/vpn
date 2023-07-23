@@ -13,6 +13,13 @@ data "aws_ami" "latest_debian" {
   }
 }
 
+// Import already existed Elastic IP
+# import {
+#   to = aws_eip.vpn_static_ip
+#   id = "your_eip_id"
+# }
+
+// Create new Elastic IP
 resource "aws_eip" "vpn_static_ip" {
   instance   = aws_instance.vpn_server.id
   depends_on = [aws_internet_gateway.gw]
@@ -22,11 +29,15 @@ resource "aws_eip" "vpn_static_ip" {
   }
 }
 
-resource "aws_instance" "vpn_server" {
-  ami           = data.aws_ami.latest_debian.id
-  instance_type = var.instance_type
-  key_name      = var.key_name
+resource "aws_key_pair" "nvirginia" {
+  key_name   = var.key_name
+  public_key = file(var.key_path)
+}
 
+resource "aws_instance" "vpn_server" {
+  ami                    = data.aws_ami.latest_debian.id
+  instance_type          = var.instance_type
+  key_name               = aws_key_pair.nvirginia.key_name
   subnet_id              = aws_subnet.public[0].id
   iam_instance_profile   = aws_iam_instance_profile.ec2_profile.name
   vpc_security_group_ids = [aws_security_group.allow_vpn_udp.id]
