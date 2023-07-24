@@ -34,6 +34,7 @@ resource "aws_iam_policy" "s3_access" {
         {
           "Effect" : "Allow",
           "Action" : [
+            // You need to allow all of this in order s3fs mount to work.
             "s3:ListBucket",
             "s3:GetObject",
             "s3:DeleteObject",
