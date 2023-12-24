@@ -41,7 +41,7 @@ services:
       - INTERNAL_SUBNET=10.13.13.0
       - LOG_CONFS=false
     volumes:
-      - /mnt/${bucket}/config:/config
+      - ${mount_path}/config:/config
     ports:
       - 51820:51820/udp
     sysctls:
@@ -51,19 +51,19 @@ EOF
 
 chown ${user}:${user} /home/${user}/docker-compose.yaml
 
+export BUCKET="${aws_s3_bucket_name}"
+export MOUNT_PATH="${mount_path}"
+export REGION="${region}"
+mkdir -p $MOUNT_PATH
+
 # Install and configure s3fs
 apt-get install s3fs -y
-export REGION="${region}"
-export BUCKET="${bucket}"
-export MOUNT="${mount_path}"
-
-mkdir $MOUNT
 # Mount S3 bucket
-s3fs -o allow_other -o iam_role=auto -o endpoint=$REGION -o url="https://s3-$REGION.amazonaws.com" $BUCKET $MOUNT
+s3fs -o allow_other -o iam_role=auto -o endpoint=$REGION -o url="https://s3-$REGION.amazonaws.com" $BUCKET $MOUNT_PATH
 # Mount on reboot
-echo "s3fs#$BUCKET $MOUNT fuse allow_other,nonempty,use_path_request_style,iam_role=auto,url=https://s3-$REGION.amazonaws.com,endpoint=$REGION 0 0" >> /etc/fstab
+echo "s3fs#$BUCKET $MOUNT_PATH fuse allow_other,nonempty,use_path_request_style,iam_role=auto,url=https://s3-$REGION.amazonaws.com,endpoint=$REGION 0 0" >> /etc/fstab
 
-cd /home/${user}/
-docker compose up -d
+# cd /home/${user}/
+docker compose -f /home/${user}/docker-compose.yaml up -d
 
 echo "-----------------USER_DATA END-----------------"

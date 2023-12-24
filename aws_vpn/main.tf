@@ -51,9 +51,9 @@ resource "aws_instance" "vpn_server" {
       "containerd.io",
       "docker-compose-plugin"
     ],
-    region     = var.region,
-    bucket     = var.aws_s3_bucket_name,
-    mount_path = "/mnt/${aws_s3_bucket.wg-vpn-bucket.bucket}/"
+    region             = var.region,
+    aws_s3_bucket_name = var.aws_s3_bucket_name,
+    mount_path         = "/mnt/${var.aws_s3_bucket_name}/"
   })
   tags = {
     Name = "My VPN"
